@@ -58,7 +58,7 @@ def initialize_page():
 
 # Get the current API key, either the user's or the default
 def get_current_api_key_for_agent_use():
-    key = st.session_state.user_api_key if st.session_state.user_api_key else st.session_state.original_api_key
+    key = st.session_state.user_api_key if st.session_state.user_api_key else st.secrets["OPENAI_API_KEY"]
     if key is None:
         key = "placeholder"
     return key
