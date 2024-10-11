@@ -14,6 +14,7 @@ def initialize_session_state():
 
     st.session_state.setdefault("user_api_key", "")
     st.session_state.setdefault("original_api_key", os.environ.get("OPENAI_API_KEY", None))  # Store the original API key
+    print(st.session_state.original_api_key)
     st.session_state.setdefault("show_function_calls", False)
     st.session_state.setdefault("ui_disabled", False)
     st.session_state.setdefault("lock_widgets", False)
@@ -58,7 +59,7 @@ def initialize_page():
 
 # Get the current API key, either the user's or the default
 def get_current_api_key_for_agent_use():
-    key = st.session_state.user_api_key if st.session_state.user_api_key else st.secrets["OPENAI_API_KEY"]
+    key = st.session_state.user_api_key if st.session_state.user_api_key else st.session_state.original_api_key
     if key is None:
         key = "placeholder"
     return key
