@@ -154,9 +154,6 @@ def main():
         st.button(label = "Clear chat for current assistant", 
                   on_click=clear_chat_current_agent, 
                   disabled=st.session_state.lock_widgets)
-        st.checkbox("🛠️ Show calls to external tools", 
-                    key="show_function_calls", 
-                    disabled=st.session_state.lock_widgets)
 
         st.markdown("---")
 
