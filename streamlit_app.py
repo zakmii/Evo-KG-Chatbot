@@ -24,7 +24,7 @@ def initialize_session_state():
     if "agents" not in st.session_state:
         st.session_state.agents = {
             "EvoKG Assistant": {
-                "agent": EvoKgAgent("EvoKG Assistant", model="gpt-4o-mini", openai_api_key=get_current_api_key_for_agent_use(), auto_summarize_buffer_tokens=10000),
+                "agent": EvoKgAgent("EvoKG Assistant", model="gpt-4o-mini-2024-07-18", openai_api_key=get_current_api_key_for_agent_use(), auto_summarize_buffer_tokens=10000),
                 "greeting": greeting,
                 "avatar": "ℹ️",
                 "user_avatar": "👤",
