@@ -13,7 +13,7 @@ def initialize_session_state():
         st.session_state.logger.addHandler(logging.StreamHandler())
 
     st.session_state.setdefault("user_api_key", "")
-    st.session_state.setdefault("original_api_key", os.environ.get("OPENAI_API_KEY", None))  # Store the original API key
+    st.session_state.setdefault("original_api_key", st.secrets["OPENAI_API_KEY"])  # Store the original API key
     print(st.session_state.original_api_key)
     st.session_state.setdefault("show_function_calls", False)
     st.session_state.setdefault("ui_disabled", False)
@@ -28,13 +28,7 @@ def initialize_session_state():
                 "greeting": greeting,
                 "avatar": "ℹ️",
                 "user_avatar": "👤",
-            },
-            # "EvoKG Assistant (GPT 3.5)": {
-            #     "agent": EvoKgAgent("EvoKG Assistant (GPT 3.5)", model="gpt-3.5-turbo-0613", openai_api_key=get_current_api_key_for_agent_use(), auto_summarize_buffer_tokens=1000),
-            #     "greeting": greeting,
-            #     "avatar": "ℹ️",
-            #     "user_avatar": "👤",
-            # }
+            }
         }
 
     st.session_state.setdefault("current_agent_name", list(st.session_state.agents.keys())[0])
