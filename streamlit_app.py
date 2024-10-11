@@ -1,7 +1,6 @@
 import streamlit as st
 import os
 from agents import EvoKgAgent
-import dotenv
 import logging
 
 # Initialize session states
@@ -14,7 +13,6 @@ def initialize_session_state():
 
     st.session_state.setdefault("user_api_key", "")
     st.session_state.setdefault("original_api_key", st.secrets["OPENAI_API_KEY"])  # Store the original API key
-    print(st.session_state.original_api_key)
     st.session_state.setdefault("show_function_calls", False)
     st.session_state.setdefault("ui_disabled", False)
     st.session_state.setdefault("lock_widgets", False)
@@ -195,6 +193,5 @@ def main():
 # Main script execution
 if __name__ == "__main__":
     initialize_page()
-    dotenv.load_dotenv()
     initialize_session_state()
     main()
