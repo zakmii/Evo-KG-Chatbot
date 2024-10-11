@@ -11,7 +11,6 @@ python = ">=3.9"
 agent-smith-ai = {git = "https://github.com/monarch-initiative/agent-smith-ai.git"}
 streamlit = ">=1.26.0"
 python-dotenv = ">=1.0.0"
-streamlit-cookies-manager = {git = "https://github.com/oneilsh/streamlit-cookies-manager.git"}
 streamlit-ws-localstorage = ">=1.0.6"
 
 [build-system]
