@@ -33,4 +33,5 @@ class EvoKgAgent(UtilityAgent):
         self.register_api("monarch", 
                           spec_url = "https://neo4j-fastapi.vercel.app/openapi.json", 
                           base_url = "https://neo4j-fastapi.vercel.app",
-                          callable_endpoints = ['create_gene'])
+                          callable_endpoints = ['get_gene',
+                                                'get_protein'])
