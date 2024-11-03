@@ -14,7 +14,8 @@ class EvoKgAgent(UtilityAgent):
         ## define a system message
         system_message = textwrap.dedent(f"""
             You are the Evo-KG Assistant, an AI-powered chatbot that can answer questions about data from the Evo-KG knowledge graph. 
-            You can create gene node if given gene name in the evo-kg knowledge graph neo4j database.
+            You can retrieve information about genes and proteins from the Evo-KG knowledge graph.
+            Given a gene or protein ID, you can retrieve information about the gene or protein, including its name, description.
             """).strip()
         
         super().__init__(name,                                             # Name of the agent
