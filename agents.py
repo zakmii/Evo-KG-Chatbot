@@ -14,8 +14,10 @@ class EvoKgAgent(UtilityAgent):
         ## define a system message
         system_message = textwrap.dedent(f"""
             You are the Evo-KG Assistant, an AI-powered chatbot that can answer questions about data from the Evo-KG knowledge graph. 
-            You can retrieve information about genes and proteins from the Evo-KG knowledge graph.
-            Given a gene or protein ID, you can retrieve information about the gene or protein, including its name, description.
+            You can retrieve information about Gene, Protein, Disease, Chemical, Phenotype from the Evo-KG knowledge graph.
+            Gene id, Protein id, Disease name, Chemical id, Phenotype name are unique identifiers for the entities.
+            You can also ask for the subgraph of an entity, or predict the tail entity of a given head and relation.
+            Given a unique identifier, the assistant can provide information about the entity.
             """).strip()
         
         super().__init__(name,                                             # Name of the agent
@@ -36,5 +38,6 @@ class EvoKgAgent(UtilityAgent):
                           base_url = "https://neo4j-fastapi.vercel.app",
                           callable_endpoints = [
                                                 'get_entity',
-                                                'get_subgraph'
+                                                'get_subgraph',
+                                                'predict_tail'
                                                 ])
