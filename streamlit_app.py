@@ -20,7 +20,6 @@ def initialize_session_state():
     greeting = """Hello! I'm the Evo-KG Assistant, and I can help you explore and understand the Evo-KG knowledge graph. You can ask me about:
 
 - Information on specific entities like **Genes**, **Proteins**, **Diseases**, **Chemicals**, and **Phenotypes**.
-- Relationships between different entities in the Evo-KG graph.
 - Subgraphs of specific entities to understand their connections in more detail.
 - Predicting relationships, such as predicting the tail entity when given a head entity and relation.
 
