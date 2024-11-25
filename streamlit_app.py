@@ -17,13 +17,14 @@ def initialize_session_state():
     st.session_state.setdefault("ui_disabled", False)
     st.session_state.setdefault("lock_widgets", False)
 
-    greeting = """Hello! I'm the Evo-KG Assistant, and I can help you explore and understand the Evo-KG knowledge graph. You can ask me about:
+    greeting = """I'm the Evo-KG Assistant, and I’m here to help you explore and understand the Evo-KG knowledge graph. Here’s what you can ask me:
 
-- Information on specific entities like **Genes**, **Proteins**, **Diseases**, **Chemicals**, and **Phenotypes**.
-- Subgraphs of specific entities to understand their connections in more detail.
-- Predicting relationships, such as predicting the tail entity when given a head entity and relation.
+Information about specific entities:
 
-Feel free to ask any questions related to these topics, and I’ll do my best to assist you!"""
+Example: "Tell me about the gene with ID BRCA1."
+You can ask about Genes, Proteins, Diseases, Chemicals, or Phenotypes, and their relationships such as DRUG_DRUG, GENE_PROTEIN, or DISEASE_PHENOTYPE.
+
+Feel free to ask any of these questions, and I’ll do my best to assist you!"""
 
 
     if "agents" not in st.session_state:
