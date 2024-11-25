@@ -74,5 +74,8 @@ You are only authorized to answer questions directly related to the Evo-KG knowl
                           callable_endpoints = [
                                                 'get_entity',
                                                 'get_subgraph',
-                                                'predict_tail'
+                                                'predict_tail',
+                                                'get_prediction_rank',
+                                                'check_relationship',
+                                                'get_entity_relationships',
                                                 ])
