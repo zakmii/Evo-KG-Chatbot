@@ -22,7 +22,7 @@ def initialize_session_state():
 Information about specific entities:
 
 Example: "Tell me about the gene with ID BRCA1."
-You can ask about Genes, Proteins, Diseases, Chemicals, or Phenotypes, and their relationships such as DRUG_DRUG, GENE_PROTEIN, or DISEASE_PHENOTYPE.
+You can ask about Gene, Protein, Disease, Chemical, Phenotype, Aging_Phenotype, Epigenetic_Modification, Tissue, AA_Intervention, Hallmark, Metabolite, and their relationships such as DRUG_DRUG, GENE_PROTEIN, or DISEASE_PHENOTYPE.
 
 Feel free to ask any of these questions, and I’ll do my best to assist you!"""
 
