@@ -84,8 +84,8 @@ You STRICLTY NEED TO ONLY answer questions directly related to the Evo-KG knowle
         ##    callable endpoints must have a "description" and "operationId"
         ##    params can be in body or query, but must be fully specified
         self.register_api("monarch", 
-                          spec_url = "https://neo4j-fastapi.vercel.app/openapi.json", 
-                          base_url = "https://neo4j-fastapi.vercel.app",
+                          spec_url = "http://192.168.24.13:1026/openapi.json", 
+                          base_url = "http://192.168.24.13:1026",
                           callable_endpoints = [
                                                 'get_entity',
                                                 'get_subgraph',
