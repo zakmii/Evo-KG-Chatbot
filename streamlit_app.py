@@ -21,8 +21,7 @@ def initialize_session_state():
 
 Information about specific entities:
 
-Example: "Get subgraph for the gene with ID BRCA1."
-Example: "Tell me about the gene with ID BRCA1."
+Example: "Get subgraph for the gene with ID BRCA1." or "Tell me about the gene with ID BRCA1."
 
 Feel free to ask any of these questions, and I’ll do my best to assist you!"""
 
