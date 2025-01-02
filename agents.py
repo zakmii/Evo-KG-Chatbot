@@ -19,33 +19,50 @@ Evo-KG contains information on the following entity types: Gene, Protein, Diseas
 Relations in the Knowledge Graph:
 The knowledge graph supports the following relations between entities:
 
-AA_INTERVENTION_HALLMARK
-DISEASE_DISEASE
-DISEASE_DRUG
-DISEASE_GENE
-DISEASE_PHENOTYPE
-DISEASE_PROTEIN
-DRUG_AGING_PHENOTYPE
-DRUG_DISEASE
-DRUG_DRUG
-DRUG_GENE
-DRUG_PROTEIN
-GENE_AGING_PHENOTYPE
-GENE_DISEASE
-GENE_DRUG
-GENE_EPIGENETIC_MODIFICATION
-GENE_GENE
-GENE_HALLMARK
-GENE_METABOLITE
-GENE_PHENOTYPE
-GENE_PROTEIN
-GENE_TISSUE
-METABOLITE_METABOLITE
-PHENOTYPE_PHENOTYPE
-PROTEIN_DISEASE
-PROTEIN_DRUG
-PROTEIN_GENE
-PROTEIN_PROTEIN
+Disease-related Relationships
+DISEASE_DISEASE: Between nodes of type Disease and Disease.
+DISEASE_DRUG: Between nodes of type Disease and Chemical.
+DISEASE_GENE: Between nodes of type Disease and Gene.
+DISEASE_PHENOTYPE: Between nodes of type Disease and Phenotype.
+DISEASE_PROTEIN: Between nodes of type Disease and Protein.
+                                         
+Drug-related Relationships
+DRUG_DISEASE: Between nodes of type Chemical and Disease.
+DRUG_DRUG: Between nodes of type Chemical and Chemical.
+DRUG_GENE: Between nodes of type Chemical and Gene.
+DRUG_PROTEIN: Between nodes of type Chemical and Protein.
+                                         
+Gene-related Relationships
+GENE_DISEASE: Between nodes of type Gene and Disease.
+GENE_DRUG: Between nodes of type Gene and Chemical.
+GENE_GENE: Between nodes of type Gene and Gene.
+GENE_HALLMARK: Between nodes of type Gene and Hallmark.
+GENE_METABOLITE: Between nodes of type Gene and Metabolite.
+GENE_PHENOTYPE: Between nodes of type Gene and Phenotype.
+GENE_PROTEIN: Between nodes of type Gene and Protein.
+GENE_TISSUE: Between nodes of type Gene and Tissue.
+                                         
+Hallmark Relationships
+HALLMARK_PHENOTYPE: Between nodes of type Hallmark and Phenotype.
+                                         
+Metabolite and Phenotype Relationships
+METABOLITE_METABOLITE: Between nodes of type Metabolite and Metabolite.
+PHENOTYPE_PHENOTYPE: Between nodes of type Phenotype and Phenotype.
+                                         
+Protein-related Relationships
+PROTEIN_DISEASE: Between nodes of type Protein and Disease.
+PROTEIN_DRUG: Between nodes of type Protein and Chemical.
+PROTEIN_GENE: Between nodes of type Protein and Gene.
+PROTEIN_PROTEIN: Between nodes of type Protein and Protein.
+PROTEIN_TISSUE: Between nodes of type Protein and Tissue.
+                                         
+Specialized Relationships
+drug_agingphenotype: Between nodes of type Chemical and Aging_Phenotype.
+gene_agingphenotype: Between nodes of type Gene and Aging_Phenotype.
+gene_epigeneticalterations: Between nodes of type Gene and Epigenetic_Modification.
+gene_genomicinstability: Between nodes of type Gene and Hallmark.
+intervention_hallmark: Between nodes of type AA_Intervention and Hallmark.
+protein_agingphenotype: Between nodes of type Protein and Aging_Phenotype.
 
 Note:
 For the entity type Chemical, all relations are prefixed with DRUG_ and/or suffixed with _DRUG, rather than using CHEMICAL_.
