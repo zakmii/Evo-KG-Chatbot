@@ -1,7 +1,16 @@
 import streamlit as st
-import os
+import threading
 from agents import EvoKgAgent
 import logging
+
+def clear_chat():
+    if "agents" in st.session_state:
+        for agent in st.session_state.agents.values():
+            agent["agent"].clear_chat_history()
+    st.experimental_rerun()
+
+def set_clear_chat_timer():
+    threading.Timer(3600, clear_chat).start()  # 3600 seconds = 1 hour
 
 # Initialize session states
 def initialize_session_state():
@@ -35,6 +44,10 @@ Feel free to ask any of these questions, and I’ll do my best to assist you!"""
                 "user_avatar": "👤",
             }
         }
+
+    if "clear_chat_timer_set" not in st.session_state:
+        set_clear_chat_timer()
+        st.session_state.clear_chat_timer_set = True
 
     st.session_state.setdefault("current_agent_name", list(st.session_state.agents.keys())[0])
 
