@@ -7,12 +7,13 @@ def clear_chat():
     if "agents" in st.session_state:
         for agent in st.session_state.agents.values():
             agent["agent"].clear_chat_history()
-    st.experimental_rerun()
+    st.rerun()
+
 
 def set_clear_chat_timer():
     threading.Timer(3600, clear_chat).start()  # 3600 seconds = 1 hour
 
-# Initialize session states
+
 def initialize_session_state():
     if "logger" not in st.session_state:
         st.session_state.logger = logging.getLogger(__name__)
@@ -26,19 +27,34 @@ def initialize_session_state():
     st.session_state.setdefault("ui_disabled", False)
     st.session_state.setdefault("lock_widgets", False)
 
-    greeting = """I'm the Evo-KG Assistant, and I’m here to help you explore and understand the Evo-KG knowledge graph. Here’s what you can ask me:
+    greeting = """
+# Welcome to EvoKG Chatbot
 
-Information about specific entities:
+#### I'm the EvoKG Assistant, and I’m here to help you explore and understand the Evo-KG knowledge graph. 
 
-Example: "Get subgraph for the gene with ID BRCA1." or "Tell me about the gene with ID BRCA1."
+## Sample Questions You Can Ask
+To get started, try asking questions like:
 
-Feel free to ask any of these questions, and I’ll do my best to assist you!"""
+* Get details about the disease Stomach Neoplasm.
+* How many nodes are connected to Stomach Neoplasm in EvoKG?
+* Predict new drug-disease links for a specific drug.
+* Predict new drug-aging phenotype links for the same drug.
 
+These examples highlight how EvoKG can answer specific queries and assist in predictive biological analysis.
+
+#### Feel free to ask any of these questions, and I’ll do my best to assist you!
+---
+"""
 
     if "agents" not in st.session_state:
         st.session_state.agents = {
             "EvoKG Assistant": {
-                "agent": EvoKgAgent("EvoKG Assistant", model="gpt-4o-mini", openai_api_key=get_current_api_key_for_agent_use(), auto_summarize_buffer_tokens=10000),
+                "agent": EvoKgAgent(
+                    "EvoKG Assistant",
+                    model="gpt-4o-mini",
+                    openai_api_key=get_current_api_key_for_agent_use(),
+                    auto_summarize_buffer_tokens=10000
+                ),
                 "greeting": greeting,
                 "avatar": "ℹ️",
                 "user_avatar": "👤",
@@ -57,41 +73,66 @@ Feel free to ask any of these questions, and I’ll do my best to assist you!"""
         if "messages" not in agent:
             agent["messages"] = []
 
+    st.session_state.setdefault("current_page", "intro")
+
+    # Add navigation menu style
+    st.session_state.setdefault("nav_style", """
+        <style>
+        .nav-link {
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            display: inline-block;
+            width: 100%;
+            color: #444;
+        }
+        .nav-link:hover {
+            background-color: #f0f2f6;
+        }
+        .nav-link.active {
+            background-color: #e6e9ef;
+            font-weight: bold;
+        }
+        </style>
+    """)
+
+
 def initialize_page():
     st.set_page_config(
         page_title="Evo-KG Assistant",
         page_icon="ℹ️",
         layout="centered",
         initial_sidebar_state="expanded",
-        # menu_items={
-        #     "Get Help":",
-        #     "About": ",
-        # }
     )
 
-# Get the current API key, either the user's or the default
+
 def get_current_api_key_for_agent_use():
+    """Get the current API key, either the user's or the default."""
     key = st.session_state.user_api_key if st.session_state.user_api_key else st.session_state.original_api_key
     if key is None:
         key = "placeholder"
     return key
 
-# Update agents with new API key
+
 def update_agents_api_key():
+    """Update all agents with the new API key."""
     for agent in st.session_state.agents.values():
         agent["agent"].set_api_key(get_current_api_key_for_agent_use())
 
-# Check if we have a valid API key
+
 def has_valid_api_key():
+    """Check if a valid API key is available."""
     return bool(st.session_state.user_api_key) or bool(st.session_state.original_api_key)
 
-# Render chat message
+
 def render_message(message):
+    """Render a chat message in Streamlit."""
     current_agent_avatar = st.session_state.agents[st.session_state.current_agent_name].get("avatar", None)
     current_user_avatar = st.session_state.agents[st.session_state.current_agent_name].get("user_avatar", None)
 
     if message.role == "user":
-        with st.chat_message("user", avatar = current_user_avatar):
+        with st.chat_message("user", avatar=current_user_avatar):
             st.write(message.content)
 
     elif message.role == "system":
@@ -106,7 +147,6 @@ def render_message(message):
         if message.is_function_call:
             with st.chat_message("assistant", avatar="🛠️"):
                 st.text(f"{message.func_name}(params = {message.func_arguments})")
-
         elif message.role == "function":
             with st.chat_message("assistant", avatar="✔️"):
                 st.text(message.content)
@@ -119,10 +159,11 @@ def render_message(message):
         current_action = f"*Evaluating result ({message.func_name})...*"
 
     return current_action
-    
-# Handle chat input and responses
+
+
 def handle_chat_input():
-    if prompt := st.chat_input(disabled=st.session_state.lock_widgets, on_submit=lock_ui):  # Step 4: Add on_submit callback
+    """Handle user chat input in the Streamlit chat interface."""
+    if prompt := st.chat_input(disabled=st.session_state.lock_widgets, on_submit=lock_ui):
         agent = st.session_state.agents[st.session_state.current_agent_name]
 
         # Continue with conversation
@@ -139,75 +180,292 @@ def handle_chat_input():
                     message = next(messages)
                     agent['messages'].append(message)
                     st.session_state.current_action = render_message(message)
-       
+
+                    # Log message info
                     session_id = st.runtime.scriptrunner.add_script_run_ctx().streamlit_script_run_ctx.session_id
                     info = {"session_id": session_id, "message": message.model_dump(), "agent": st.session_state.current_agent_name}
                     st.session_state.logger.info(info)
             except StopIteration:
                 break
 
-        st.session_state.lock_widgets = False  # Step 5: Unlock the UI
+        st.session_state.lock_widgets = False
         st.rerun()
 
+
 def clear_chat_current_agent():
+    """Clear chat for the current agent."""
     current_agent = st.session_state.agents[st.session_state.current_agent_name]
     current_agent['conversation_started'] = False
     current_agent['agent'].clear_history()
     st.session_state.agents[st.session_state.current_agent_name]['messages'] = []
 
 
-# Lock the UI when user submits input
 def lock_ui():
+    """Lock the UI when user submits input."""
     st.session_state.lock_widgets = True
 
-# Main Streamlit UI
-def main():
-    with st.sidebar:
-        # st.title("Settings")
 
-        agent_names = list(st.session_state.agents.keys())
-        current_agent_name = st.selectbox(label = "**Assistant**", 
-                                          options=agent_names, 
-                                          key="current_agent_name", 
-                                          disabled=st.session_state.lock_widgets, 
-                                          label_visibility="visible")
-        st.button(label = "Clear chat for current assistant", 
-                  on_click=clear_chat_current_agent, 
-                  disabled=st.session_state.lock_widgets)
+def show_intro_page():
+    """
+    Show the Introduction page with a floating graph animation on top,
+    followed by the rest of your content.
+    """
 
-        st.markdown("---")
+    # Now your normal introduction content below the animation:
+    st.image("Asset 1.png", width=200)
+    st.markdown(
+        """
+        <div style="display: flex; align-items: center;">
+            <!-- Main heading text -->
+            <h1 style="margin-right: 10px;">Welcome to EvoKG Chatbot</h1>
+            
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
-        # Add user input for API key
+    # Custom hover CSS for sections
+    st.markdown(
+        """
+        <style>
+        .hover-section {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 1rem;
+            border-radius: 4px;
+        }
+        .hover-section:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
-        user_key = st.text_input("Set API Key", 
-                                 value = st.session_state.user_api_key, 
-                                 max_chars=51, type="password", 
-                                 help = "Enter your OpenAI API key here to override the default provided by the app.", 
-                                 disabled=st.session_state.lock_widgets)
-        if user_key != st.session_state.user_api_key and len(user_key) == 51:
-            st.session_state.user_api_key = user_key
-            update_agents_api_key()
-            # write a label like "sk-...lk6" to let the user know a custom key is set and which one
-            st.write(f"Using API key: `{user_key[:3]}...{user_key[-3:]}`")
+    # --- INTRO SECTIONS ---
+    st.markdown(
+        """
+        <div class="hover-section">
+          <h2>What is EvoKG?</h2>
+          <p>
+            EvoKG is a groundbreaking Evolutionary Knowledge Graph that brings together
+            biological insights across six species, organized in evolutionary order:
+          </p>
+          <ul>
+            <li>Y: <em>Saccharomyces cerevisiae</em> (Yeast)</li>
+            <li>C: <em>Caenorhabditis elegans</em> (Nematode)</li>
+            <li>D: <em>Drosophila melanogaster</em> (Fruit Fly)</li>
+            <li>Z: <em>Danio rerio</em> (Zebrafish)</li>
+            <li>M: <em>Mus musculus</em> (Mouse)</li>
+            <li>H: <em>Homo sapiens</em> (Human)</li>
+          </ul>
+          <p>
+            This comprehensive knowledge graph serves as a biological encyclopedia
+            with a special focus on metabolites, genes, and proteins, their relationships,
+            and their roles in health, disease, and aging. EvoKG includes 907,746 entities,
+            connected by 31 distinct relationship types, forming a network of 175,678,450 links.
+          </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        """
+        <div class="hover-section">
+            <h2>Key Features of EvoKG</h2>
+            <ul>
+              <li><strong>Cross-Species Insights:</strong> Explore data from six species to understand evolutionary relationships and biological functions.</li>
+              <li><strong>Metabolite Encyclopedia:</strong> Access detailed information about metabolites, genes, and proteins, and their alternative functions across species.</li>
+              <li><strong>Aging-Related Data:</strong> Delve into connections between aging and its associated metabolites, genes, and proteins.</li>
+              <li><strong>Link Prediction:</strong> Uncover new potential relationships (e.g., between drugs and diseases or aging phenotypes) using EvoKG's predictive capabilities.</li>
+              <li><strong>Biological Complexity:</strong> Navigate through diverse node types, including:
+                <ul>
+                  <li>GENES, PROTEINS, CHEMICALS, METABOLITES, PHENOTYPES, DISEASES</li>
+                  <li>AGING_PHENOTYPES, HALLMARKS, TISSUES</li>
+                  <li>ANTI-AGING INTERVENTIONS, EPIGENETIC_MODIFICATIONS</li>
+                </ul>
+              </li>
+              <li><strong>Relationship Diversity:</strong> Investigate interactions with 31 edge types, such as gene-disease, protein-tissue, chemical-aging phenotype, and more.</li>
+            </ul>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.markdown("---")
+
+    st.markdown(
+        """
+        <div class="hover-section">
+            <h2>What Can EvoKG Do for You?</h2>
+            <p>
+              EvoKG is designed to assist researchers, biologists, and data scientists in exploring,
+              analyzing, and generating new insights into complex biological systems. You can use
+              this chatbot to:
+            </p>
+            <ul>
+              <li>Access encyclopedic details about specific diseases, metabolites, or genes.</li>
+              <li>Discover new alternative functions for biological entities like metabolites, genes, and proteins.</li>
+              <li>Gain insights into aging and its associated biochemical pathways.</li>
+              <li>Predict new links between existing entities in the knowledge graph, helping you hypothesize novel biological interactions.</li>
+            </ul>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.markdown("---")
+
+    st.markdown(
+        """
+        <div class="hover-section">
+            <h2>Let's Explore!</h2>
+            <p>
+              With EvoKG, you're not just asking questions—you're unlocking the mysteries of evolution, aging,
+              and biological complexity across species. Start exploring today and see how EvoKG can advance
+              your research and understanding!
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # Centered button with custom styling
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.button("Start Exploring with EvoKG Chatbot →", use_container_width=True):
+            st.session_state.current_page = "chat"
+            st.rerun()
 
 
+def show_chat_page():
+    """Show the chatbot page."""
     st.header(st.session_state.current_agent_name)
 
     current_agent_avatar = st.session_state.agents[st.session_state.current_agent_name].get("avatar", None)
-    with st.chat_message("assistant", avatar = current_agent_avatar):
+    with st.chat_message("assistant", avatar=current_agent_avatar):
         st.write(st.session_state.agents[st.session_state.current_agent_name]['greeting'])
 
     for message in st.session_state.agents[st.session_state.current_agent_name]['messages']:
         render_message(message)
 
-    # Check for valid API key and adjust chat input box accordingly
     if has_valid_api_key():
         handle_chat_input()
     else:
         st.chat_input(placeholder="Enter an API key to begin chatting.", disabled=True)
 
 
-# Main script execution
+def show_tutorial_page():
+    """Show the tutorial page."""
+    st.title("EVOKG Tutorials")
+    st.markdown(
+        """
+        ## Getting Started
+        Learn how to effectively use the Evo-KG Assistant with these tutorials:
+        
+        ### Basic Queries
+        1. Searching for genes
+        2. Finding disease relationships
+        3. Exploring protein interactions
+        
+        ### Advanced Features
+        1. Complex relationship queries
+        2. Subgraph analysis
+        3. Entity predictions
+        """
+    )
+
+
+def show_contact_page():
+    """Show the contact page."""
+    st.title("Contact Us")
+    st.markdown(
+        """
+        ## Get in Touch
+        
+        For questions, feedback, or support:
+        - Email: support@evo-kg.com
+        - GitHub: [Evo-KG Repository](https://github.com/your-repo)
+        - Twitter: [@EvoKG](https://twitter.com/evokg)
+        
+        ### Report Issues
+        If you encounter any problems, please report them on our GitHub repository.
+        """
+    )
+
+
+def main():
+    """Main Streamlit UI."""
+    with st.sidebar:
+        st.title("EvoKG")
+        st.markdown("---")
+
+        # Navigation menu
+        pages = {
+            "intro": "Introduction",
+            "chat": "Chatbot",
+            "tutorial": "Tutorial",
+            "contact": "Contact Us"
+        }
+
+        # Custom CSS for navigation
+        st.markdown(st.session_state.nav_style, unsafe_allow_html=True)
+
+        # Navigation buttons with active state
+        for page_id, page_name in pages.items():
+            button_style = "nav-link active" if st.session_state.current_page == page_id else "nav-link"
+            if st.button(page_name, key=f"nav_{page_id}",
+                         help=f"Go to {page_name} page",
+                         use_container_width=True):
+                st.session_state.current_page = page_id
+                st.rerun()
+
+        st.markdown("---")
+
+        # Only show agent controls on chat page
+        if st.session_state.current_page == "chat":
+            agent_names = list(st.session_state.agents.keys())
+            current_agent_name = st.selectbox(
+                label="**Assistant**",
+                options=agent_names,
+                key="current_agent_name",
+                disabled=st.session_state.lock_widgets,
+                label_visibility="visible"
+            )
+
+            st.button(
+                label="Clear chat for current assistant",
+                on_click=clear_chat_current_agent,
+                disabled=st.session_state.lock_widgets
+            )
+
+            st.markdown("---")
+            # If you need an API Key input here, uncomment:
+            user_key = st.text_input(
+                "Set API Key",
+                value=st.session_state.user_api_key,
+                max_chars=51,
+                type="password",
+                help="Enter your OpenAI API key here to override the default provided by the app.",
+                disabled=st.session_state.lock_widgets
+            )
+            if user_key != st.session_state.user_api_key and len(user_key) == 51:
+                st.session_state.user_api_key = user_key
+                update_agents_api_key()
+                st.write(f"Using API key: `{user_key[:3]}...{user_key[-3:]}`")
+
+    # Display current page
+    if st.session_state.current_page == "intro":
+        show_intro_page()
+    elif st.session_state.current_page == "chat":
+        show_chat_page()
+    elif st.session_state.current_page == "tutorial":
+        show_tutorial_page()
+    elif st.session_state.current_page == "contact":
+        show_contact_page()
+
+
 if __name__ == "__main__":
     initialize_page()
     initialize_session_state()
