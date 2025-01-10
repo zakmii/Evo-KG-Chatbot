@@ -2,6 +2,22 @@ import streamlit as st
 import threading
 from agents import EvoKgAgent
 import logging
+import base64
+
+st.set_page_config(
+    page_title="EvoKG Assistant",
+    layout="centered",
+    initial_sidebar_state="expanded",
+)
+
+def get_img_as_base64(file):
+    try:
+        with open(file, "rb") as f:
+            data = f.read()
+        return base64.b64encode(data).decode()
+    except Exception as e:
+        st.warning(f"Could not load image {file}: {str(e)}")
+        return None
 
 def clear_chat():
     if "agents" in st.session_state:
@@ -30,7 +46,7 @@ def initialize_session_state():
     greeting = """
 # Welcome to EvoKG Chatbot
 
-#### I'm the EvoKG Assistant, and I’m here to help you explore and understand the Evo-KG knowledge graph. 
+#### I'm the EvoKG Assistant, and I’m here to help you explore and understand the EvoKG knowledge graph. 
 
 ## Sample Questions You Can Ask
 To get started, try asking questions like:
@@ -42,7 +58,7 @@ To get started, try asking questions like:
 
 These examples highlight how EvoKG can answer specific queries and assist in predictive biological analysis.
 
-#### Feel free to ask any of these questions, and I’ll do my best to assist you!
+#### Feel free to ask questions, and I’ll do my best to assist you!
 ---
 """
 
@@ -99,12 +115,25 @@ These examples highlight how EvoKG can answer specific queries and assist in pre
 
 
 def initialize_page():
-    st.set_page_config(
-        page_title="Evo-KG Assistant",
-        page_icon="ℹ️",
-        layout="centered",
-        initial_sidebar_state="expanded",
-    )
+    try:
+        # Apply background globally for dark theme
+        page_bg_img = """
+        <style>
+        [data-testid="stAppViewContainer"] {
+            background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                        url("https://www.nayuki.io/res/animated-floating-graph-nodes/floating-graph-nodes.png");
+            background-size: cover;
+            background-position: center;
+        }
+
+        [data-testid="stHeader"] { 
+            background-color: rgba(0,0,0,0);
+        }
+        </style>
+        """
+        st.markdown(page_bg_img, unsafe_allow_html=True)
+    except Exception as e:
+        st.warning(f"Could not set background: {str(e)}")
 
 
 def get_current_api_key_for_agent_use():
@@ -207,12 +236,8 @@ def lock_ui():
 
 def show_intro_page():
     """
-    Show the Introduction page with a floating graph animation on top,
-    followed by the rest of your content.
+    Show the Introduction page with content
     """
-
-    # Now your normal introduction content below the animation:
-    st.image("logo.png", width=200)
     st.markdown(
         """
         <div style="display: flex; align-items: center;">
@@ -362,7 +387,7 @@ def show_tutorial_page():
     st.markdown(
         """
         ## Getting Started
-        Learn how to effectively use the Evo-KG Assistant with these tutorials:
+        Learn how to effectively use the EvoKG Assistant with these tutorials:
         
         ### Basic Queries
         1. Searching for genes
@@ -385,9 +410,13 @@ def show_contact_page():
         ## Get in Touch
         
         For questions, feedback, or support:
-        - Email: support@evo-kg.com
-        - GitHub: [Evo-KG Repository](https://github.com/your-repo)
+        - Email: gaurav.ahuja@iiitd.ac.in
+        - GitHub: [EvoKG Repository](https://github.com/zakmii/Evo-KG-Chatbot/tree/main)
         - Twitter: [@EvoKG](https://twitter.com/evokg)
+
+        Developer:
+        - Ankit Singh : https://github.com/zakmii
+        - Arushi Sharma : https://github.com/AruShar
         
         ### Report Issues
         If you encounter any problems, please report them on our GitHub repository.
@@ -398,8 +427,15 @@ def show_contact_page():
 def main():
     """Main Streamlit UI."""
     with st.sidebar:
-        st.title("EvoKG")
+        st.markdown("""
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                <img src="data:image/png;base64,{}" alt="Logo" style="height: 150px;">
+                <h1 style="margin: 0; font-size: 44px;">EvoKG</h1>
+            </div>
+        """.format(get_img_as_base64("Asset 1.png")), unsafe_allow_html=True)
+
         st.markdown("---")
+
 
         # Navigation menu
         pages = {
