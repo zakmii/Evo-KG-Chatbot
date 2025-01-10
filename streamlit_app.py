@@ -51,8 +51,8 @@ def initialize_session_state():
 ## Sample Questions You Can Ask
 To get started, try asking questions like:
 
-* Get details about the disease Stomach Neoplasm.
-* How many nodes are connected to Stomach Neoplasm in EvoKG?
+* Get details about the disease Stomach Neoplasms.
+* How many nodes are connected to Stomach Neoplasms in EvoKG?
 * Predict new drug-disease links for a specific drug.
 * Predict new drug-aging phenotype links for the same drug.
 
@@ -64,9 +64,9 @@ These examples highlight how EvoKG can answer specific queries and assist in pre
 
     if "agents" not in st.session_state:
         st.session_state.agents = {
-            "EvoKG Assistant": {
+            "EvoKG Assistant (GPT-4o-mini)": {
                 "agent": EvoKgAgent(
-                    "EvoKG Assistant (GPT-4o-mini)",
+                    "EvoKG Assistant",
                     model="gpt-4o-mini",
                     openai_api_key=get_current_api_key_for_agent_use(),
                     auto_summarize_buffer_tokens=10000
