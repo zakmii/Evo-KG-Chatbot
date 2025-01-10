@@ -432,7 +432,7 @@ def main():
                 <img src="data:image/png;base64,{}" alt="Logo" style="height: 150px;">
                 <h1 style="margin: 0; font-size: 44px;">EvoKG</h1>
             </div>
-        """.format(get_img_as_base64("Asset 1.png")), unsafe_allow_html=True)
+        """.format(get_img_as_base64("logo.png")), unsafe_allow_html=True)
 
         st.markdown("---")
 
