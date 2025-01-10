@@ -64,7 +64,7 @@ These examples highlight how EvoKG can answer specific queries and assist in pre
 
     if "agents" not in st.session_state:
         st.session_state.agents = {
-            "EvoKG Assistant (GPT-4o-mini)": {
+            "EvoKG Assistant": {
                 "agent": EvoKgAgent(
                     "EvoKG Assistant",
                     model="gpt-4o-mini",
