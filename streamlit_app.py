@@ -66,7 +66,7 @@ These examples highlight how EvoKG can answer specific queries and assist in pre
         st.session_state.agents = {
             "EvoKG Assistant": {
                 "agent": EvoKgAgent(
-                    "EvoKG Assistant",
+                    "EvoKG Assistant (GPT-4o-mini)",
                     model="gpt-4o-mini",
                     openai_api_key=get_current_api_key_for_agent_use(),
                     auto_summarize_buffer_tokens=10000
