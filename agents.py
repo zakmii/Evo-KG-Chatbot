@@ -51,7 +51,7 @@ Interaction: Keep responses concise and offer summaries or options for large dat
         ## the openapi.json spec must be available at the spec_url:
         ##    callable endpoints must have a "description" and "operationId"
         ##    params can be in body or query, but must be fully specified
-        self.register_api("monarch", 
+        self.register_api("EvoKG", 
                           spec_url = "http://192.168.24.13:1026/openapi.json", 
                           base_url = "http://192.168.24.13:1026",
                           callable_endpoints = [
