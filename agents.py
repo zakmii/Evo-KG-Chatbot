@@ -55,7 +55,7 @@ Interaction: Keep responses concise and offer summaries or options for large dat
                           spec_url = "http://192.168.24.13:1026/openapi.json", 
                           base_url = "http://192.168.24.13:1026",
                           callable_endpoints = [
-                                                'get_entity',
+                                                'find_entity',
                                                 'get_subgraph',
                                                 'predict_tail',
                                                 'get_prediction_rank',
