@@ -3,8 +3,6 @@ import threading
 from agents import EvoKgAgent
 import logging
 import base64
-import time
-import asyncio
 
 st.set_page_config(
     page_title="EvoKG Assistant",
@@ -365,33 +363,22 @@ def show_intro_page():
             st.session_state.current_page = "chat"
             st.rerun()
 
-async def stream_assistant_message(message, container):
-    """Stream assistant message."""
-    assistant_text = ""
-    for char in message:
-        assistant_text += char
-        container.markdown(f"**Assistant:** {assistant_text}")
-        await asyncio.sleep(0.02)
 
 def show_chat_page():
     """Show the chatbot page."""
     st.header(st.session_state.current_agent_name)
 
     current_agent_avatar = st.session_state.agents[st.session_state.current_agent_name].get("avatar", None)
+    with st.chat_message("assistant", avatar=current_agent_avatar):
+        st.write(st.session_state.agents[st.session_state.current_agent_name]['greeting'])
 
-    if st.session_state.agents[st.session_state.current_agent_name]['messages']:
-        for message in st.session_state.agents[st.session_state.current_agent_name]['messages']:
-            if message.role == "assistant":
-                with st.chat_message("assistant", avatar=current_agent_avatar):
-                    asyncio.run(stream_assistant_message(message.content, st))
-            else:
-                st.chat_message(message.role, avatar=current_user_avatar).markdown(message.content)
+    for message in st.session_state.agents[st.session_state.current_agent_name]['messages']:
+        render_message(message)
 
     if has_valid_api_key():
-        with st.chat_input(disabled=st.session_state.lock_widgets, on_submit=lock_ui):
-            handle_chat_input()
+        handle_chat_input()
     else:
-        st.warning("Please provide a valid API key to use the chat.")
+        st.chat_input(placeholder="Enter an API key to begin chatting.", disabled=True)
 
 
 def show_tutorial_page():
