@@ -4,6 +4,7 @@ from agents import EvoKgAgent
 import logging
 import base64
 import time
+import asyncio
 
 st.set_page_config(
     page_title="EvoKG Assistant",
@@ -364,13 +365,13 @@ def show_intro_page():
             st.session_state.current_page = "chat"
             st.rerun()
 
-def stream_assistant_message(message, container):
-    """Stream assistant message with animation."""
+async def stream_assistant_message(message, container):
+    """Stream assistant message."""
     assistant_text = ""
     for char in message:
         assistant_text += char
         container.markdown(f"**Assistant:** {assistant_text}")
-        time.sleep(0.02)  # Adjust the speed as needed
+        await asyncio.sleep(0.02)
 
 def show_chat_page():
     """Show the chatbot page."""
@@ -382,8 +383,7 @@ def show_chat_page():
         for message in st.session_state.agents[st.session_state.current_agent_name]['messages']:
             if message.role == "assistant":
                 with st.chat_message("assistant", avatar=current_agent_avatar):
-                    message_container = st.empty()
-                    stream_assistant_message(message.content, message_container)
+                    asyncio.run(stream_assistant_message(message.content, st))
             else:
                 st.chat_message(message.role, avatar=current_user_avatar).markdown(message.content)
 
