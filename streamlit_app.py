@@ -370,7 +370,7 @@ def stream_assistant_message(message, container):
     for char in message:
         assistant_text += char
         container.markdown(f"**Assistant:** {assistant_text}")
-        time.sleep(0.02)  # Adjust the speed as needed
+        time.sleep(0.02)
 
 def show_chat_page():
     """Show the chatbot page."""
@@ -388,8 +388,8 @@ def show_chat_page():
                 st.chat_message(message.role, avatar=current_user_avatar).markdown(message.content)
 
     if has_valid_api_key():
-        with st.chat_input(disabled=st.session_state.lock_widgets, on_submit=lock_ui):
-            handle_chat_input()
+        with st.chat_input(disabled=st.session_state.lock_widgets, on_submit=handle_chat_input):
+            pass
     else:
         st.warning("Please provide a valid API key to use the chat.")
 
