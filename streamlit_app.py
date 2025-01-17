@@ -190,7 +190,7 @@ def render_message(message):
     return current_action
 
 
-def handle_chat_input():
+def handle_chat_input(message_container):
     """Handle user chat input in the Streamlit chat interface."""
     if prompt := st.chat_input(disabled=st.session_state.lock_widgets, on_submit=lock_ui):
         agent = st.session_state.agents[st.session_state.current_agent_name]
@@ -203,6 +203,7 @@ def handle_chat_input():
             messages = agent['agent'].chat(prompt, yield_prompt_message=True)
 
         st.session_state.current_action = "*Thinking...*"
+
         while True:
             try:
                 with st.spinner(st.session_state.current_action):
@@ -214,6 +215,11 @@ def handle_chat_input():
                     session_id = st.runtime.scriptrunner.add_script_run_ctx().streamlit_script_run_ctx.session_id
                     info = {"session_id": session_id, "message": message.model_dump(), "agent": st.session_state.current_agent_name}
                     st.session_state.logger.info(info)
+
+                    # Stream the message
+                    with message_container:
+                        for msg in agent['messages']:
+                            render_message(msg)
             except StopIteration:
                 break
 
@@ -372,11 +378,13 @@ def show_chat_page():
     with st.chat_message("assistant", avatar=current_agent_avatar):
         st.write(st.session_state.agents[st.session_state.current_agent_name]['greeting'])
 
+    message_container = st.empty()
+
     for message in st.session_state.agents[st.session_state.current_agent_name]['messages']:
         render_message(message)
 
     if has_valid_api_key():
-        handle_chat_input()
+        handle_chat_input(message_container)
     else:
         st.chat_input(placeholder="Enter an API key to begin chatting.", disabled=True)
 
