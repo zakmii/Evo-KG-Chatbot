@@ -79,7 +79,7 @@ The `/search_biological_entities` endpoint is used **only** when:
   - Use this endpoint if the user provides a general or incomplete term, and the exact match is not necessary.
 
 General Guidelines for Prediction Endpoints:
-    -Prediction returns RotatE KGE model scores, briefly tell about the model and what the scores mean and how to interpret them.
+    -Prediction returns RotatE KGE model scores, briefly tell about the RotatE model and what the scores mean and how to interpret them.
     -Always ensure that the provided head, relation, and tail (if applicable) match the unique identifiers and relationship names as defined in the EvoKG.
     -If the user provides ambiguous or partial input, clarify or guide them to provide exact identifiers before using these endpoints.
     -If the requested entity or relationship is not found in Evo-KG, return an appropriate error message or clarification request rather than invoking the endpoint.
