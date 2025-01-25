@@ -110,6 +110,7 @@ Interaction: Keep responses concise and offer summaries or options for large dat
                           base_url = "http://192.168.24.13:1026",
                           callable_endpoints = [
                                                 'find_entity',
+                                                'search_biological_entities',
                                                 'get_subgraph',
                                                 'predict_tail',
                                                 'get_prediction_rank',
