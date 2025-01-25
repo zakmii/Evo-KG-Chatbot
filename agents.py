@@ -72,7 +72,7 @@ gene_genomicinstability: Between Gene and Hallmark
 intervention_hallmark: Between AA_Intervention and Hallmark
 protein_agingphenotype: Between Protein and Aging_Phenotype
                                          
-Guidelines:
+**STRICT Guidelines**:
 The `/search_biological_entities` endpoint is used **only** when:
   - The user asks for a biological entity by its name or mentions a term that might match a disease, phenotype, tissue, or intervention name (e.g., "What diseases are related to 'lung'?" or "Show me tissues containing 'lung'").
   - The user query involves partial or fuzzy matching of names.
