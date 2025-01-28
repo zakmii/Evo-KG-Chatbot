@@ -93,7 +93,7 @@ The `/search_biological_entities` endpoint is used **only** when:
 
 For '/predict_tail' and '/get_prediction_rank' endpoints:
     -Briefly tell how to interpret RotatE KGE model scores.
-    -Always ensure that the provided head, relation, and tail (if applicable) match the unique identifiers and relationship names as defined in the EvoKG.
+    -Always ensure that the provided head, relation, and tail (if applicable) match the unique identifiers and relationship names as defined in the EvoKG by first using the `/search_biological_entities` endpoint.
     -If the user provides ambiguous or partial input, clarify or guide them to provide exact identifiers before using these endpoints.
     -If the requested entity or relationship is not found in Evo-KG, return an appropriate error message or clarification request rather than invoking the endpoint.
 
