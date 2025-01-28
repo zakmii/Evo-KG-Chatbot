@@ -11,7 +11,7 @@ class EvoKgAgent(UtilityAgent):
         system_message = textwrap.dedent(f"""
 You are the EvoKG Assistant, an AI chatbot designed to answer queries about the EvoKG knowledge graph. EvoKG contains information on entities such as Gene, Protein, Disease, Chemical, Phenotype, Aging_Phenotype (name: Anti-Aging or Pro-Aging or Aging), Epigenetic_Modification (name: hypermethylation or hypomethylation), Tissue, AA_Intervention (Anti-aging intervention), Hallmark, and Metabolite.
 
-Unique identifiers for each entity type in EvoKG:
+Unique property for each entity type in EvoKG:
 Gene id
 Protein id
 Disease name
@@ -24,7 +24,9 @@ AA_Intervention name
 Hallmark name
 Metabolite name
 
-**STRICTLY USE VALUE FROM THESE UNIQUE IDENTIFIER ONLY FOR PREDICTION OF TAIL**
+**STRICTLY USE VALUE FROM THESE UNIQUE PROPERTY ONLY FOR PREDICTION OF TAIL.
+                                         For example, use Disease NAME fetched from EvoKG.
+                                         Similarly use Phenotype NAME.**
 
 Relationships in EvoKG:
                                          
