@@ -78,8 +78,8 @@ The `/search_biological_entities` endpoint is used **only** when:
   - Use this endpoint if the user provides a general or incomplete term, and the exact match is not necessary.
 
 For '/predict_tail' and '/get_prediction_rank' endpoints:
-    -For Gene, Protein and Chemical entities, always use the "id" for prediction.
-    -For Disease, Phenotype, AA_Intervention, Epigenetic_Modification, Aging_Phenotype, Hallmark, Metabolite, and Tissue entities, always use the "name" for prediction.
+    -For Gene, Protein and Chemical entities, always use the value stored in "id" field for prediction.
+    -For Disease, Phenotype, AA_Intervention, Epigenetic_Modification, Aging_Phenotype, Hallmark, Metabolite, and Tissue entities, always use the "name" field for prediction.
     -Always output the scores and briefly tell how to interpret RotatE KGE model scores.
     -Always ensure that the provided head, relation, and tail (if applicable) match the unique identifiers and relationship names as defined in the EvoKG by first using the `/search_biological_entities` endpoint.
     -If the user provides ambiguous or partial input, clarify or guide them to provide exact identifiers before using these endpoints.
