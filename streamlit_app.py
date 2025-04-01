@@ -10,13 +10,13 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-def get_img_as_base64(file):
+def get_img_as_base64(file_path:str):
     try:
-        with open(file, "rb") as f:
+        with open(file_path, "rb") as f:
             data = f.read()
         return base64.b64encode(data).decode()
     except Exception as e:
-        st.warning(f"Could not load image {file}: {str(e)}")
+        st.warning(f"Could not load image {file_path}: {str(e)}")
         return None
 
 def clear_chat():
@@ -44,23 +44,23 @@ def initialize_session_state():
     st.session_state.setdefault("lock_widgets", False)
 
     greeting = """
-# Welcome to EvoKG Chatbot
+        # Welcome to EvoKG Chatbot
 
-#### I'm the EvoKG Assistant, and I’m here to help you explore and understand the EvoKG knowledge graph. 
+        #### I'm the EvoKG Assistant, and I’m here to help you explore and understand the EvoKG knowledge graph. 
 
-## Sample Questions You Can Ask
-To get started, try asking questions like:
+        ## Sample Questions You Can Ask
+        To get started, try asking questions like:
 
-* Get details about the disease Stomach Neoplasms.
-* How many nodes are connected to Stomach Neoplasms in EvoKG?
-* Predict new drug-disease links for a specific drug.
-* Predict new drug-aging phenotype links for the same drug.
+        * Get details about the disease Stomach Neoplasms.
+        * How many nodes are connected to Stomach Neoplasms in EvoKG?
+        * Predict new drug-disease links for a specific drug.
+        * Predict new drug-aging phenotype links for the same drug.
 
-These examples highlight how EvoKG can answer specific queries and assist in predictive biological analysis.
+        These examples highlight how EvoKG can answer specific queries and assist in predictive biological analysis.
 
-#### Feel free to ask questions, and I’ll do my best to assist you!
----
-"""
+        #### Feel free to ask questions, and I’ll do my best to assist you!
+        ---
+                """
 
     if "agents" not in st.session_state:
         st.session_state.agents = {
