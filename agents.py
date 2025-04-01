@@ -3,7 +3,6 @@ from kani import AIParam, ai_function, ChatMessage
 from typing import Annotated, List
 import logging
 import requests
-import streamlit as st
 
 # for reading API keys from .env file
 import os
@@ -135,5 +134,4 @@ Interaction: Keep responses concise and offer summaries or options for large dat
         response = requests.get(url, params=kwargs, timeout=timeout)
         response.raise_for_status()
         return response.json()
-    
     
