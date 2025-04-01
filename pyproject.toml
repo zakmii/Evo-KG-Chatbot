@@ -10,7 +10,7 @@ readme = "README.md"
 python=">=3.11,<4.0"
 streamlit = "^1.26.0"
 python-dotenv = "^1.0.0"
-kani-utils = {git = "https://github.com/oneilsh/kani-utils.git", branch = "stream"}
+evo-utils = {git = "https://github.com/zakmii/evo-utils.git"}
 httpx = "^0.24.0"
 neo4j = "^5.20.0"
 
