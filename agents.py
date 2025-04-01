@@ -128,10 +128,12 @@ Interaction: Keep responses concise and offer summaries or options for large dat
 
         self.api_base = "http://192.168.24.13:1026"
 
-# helper function to make API calls
+  # helper function to make API calls
     def api_call(self, endpoint, timeout=30, **kwargs):
         url = f"{self.api_base}/{endpoint}"
         logging.info(f"############ api_call: url={url}, kwargs={kwargs}")
         response = requests.get(url, params=kwargs, timeout=timeout)
         response.raise_for_status()
         return response.json()
+    
+    
