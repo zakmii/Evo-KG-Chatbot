@@ -1,18 +1,18 @@
 [tool.poetry]
-name = "evo-kg-agent"
+name = "evo-agent"
 version = "0.1.0"
-description = "LLM retrieval augmented generation agent for Evo-KG."
+description = "LLM retrieval augmented generation agent for EvoKG."
 authors = ["Ankit Singh <ankit21450@iiitd.ac.in>"]
 license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.9.7 || >3.9.7,<3.10"
-agent-smith-ai = {git = "https://github.com/monarch-initiative/agent-smith-ai.git"}
+python=">=3.11,<4.0"
 streamlit = "^1.26.0"
 python-dotenv = "^1.0.0"
-streamlit-cookies-manager = {git = "https://github.com/oneilsh/streamlit-cookies-manager.git"}
-streamlit-ws-localstorage = "^1.0.6"
+kani-utils = {git = "https://github.com/oneilsh/kani-utils.git", branch = "stream"}
+httpx = "^0.24.0"
+neo4j = "^5.20.0"
 
 [build-system]
 requires = ["poetry-core"]
