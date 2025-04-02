@@ -31,7 +31,7 @@ engine = OpenAIEngine(os.environ["OPENAI_API_KEY"], model="gpt-4o-mini")
 # Agents are keyed by their name, which is what the user will see in the UI
 def get_agents():
     return {
-            "Phenomics Assistant (4o)": PhenomicsAgent(engine), #, prompt_tokens_cost = 0.005, completion_tokens_cost = 0.015),
+            "EvoLLM (4o-mini)": EvoKgAgent(engine), #, prompt_tokens_cost = 0.005, completion_tokens_cost = 0.015),
            }
 
 
