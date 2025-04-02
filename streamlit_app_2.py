@@ -12,14 +12,14 @@ dotenv.load_dotenv()
 # see more at https://docs.streamlit.io/library/api-reference/utilities/st.set_page_config
 # this function MUST be run first
 ks.initialize_app_config(
-    show_function_calls = True,
+    show_function_calls = False,
     page_title = "EvoLLM",
     page_icon = "🧬", # can also be a URL
     initial_sidebar_state = "expanded",
     menu_items = {
             "Get Help": "https://github.com/monarch-initiative/phenomics-assistant",
             "Report a Bug": "https://github.com/monarch-initiative/phenomics-assistant/issues",
-            "About": "Phenomics Assistant is built on GPT-4, Streamlit, zhudotexe/kani, hourfu/redlines, and oneilsh/kani-utils.",
+            "About": "EvoLLM is built on GPT-4o-mini, Streamlit, zhudotexe/kani, hourfu/redlines, and oneilsh/kani-utils.",
         }
 )
 
