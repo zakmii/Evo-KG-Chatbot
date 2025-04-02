@@ -118,7 +118,7 @@ Interaction: Keep responses concise and offer summaries or options for large dat
 
         #### Feel free to ask questions, and I’ll do my best to assist you!
         ---
-                """.strip()
+                """
 
         self.description = "Queries the EvoKG knowledge graph."
         self.avatar = "🧬"

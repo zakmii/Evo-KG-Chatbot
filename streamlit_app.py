@@ -60,7 +60,7 @@ def initialize_session_state():
 
         #### Feel free to ask questions, and I’ll do my best to assist you!
         ---
-                """.strip()
+                """
 
     if "agents" not in st.session_state:
         st.session_state.agents = {
