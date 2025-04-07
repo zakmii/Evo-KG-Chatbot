@@ -149,3 +149,198 @@ Interaction: Keep responses concise and offer summaries or options for large dat
       except Exception as e:
         logging.error(f"Error calling hello_world endpoint: {str(e)}")
         return {"error": f"Failed to get hello world message: {str(e)}"}
+    
+    @ai_function
+    def get_sample_triples(self, rel_type: str) -> List[dict]:
+      """
+      Retrieve sample triples based on the relationship type
+      
+      Args:
+        rel_type: The relationship type to filter triples. (e.g. GENE_GENE, GENE_DISEASE, GENE_PHENOTYPE)
+        
+      Returns:
+        List[dict]: A list of triples with head, relation, and tail
+      """
+      try:
+        response = self.api_call("sample_triples", rel_type=rel_type)
+        return response
+      except Exception as e:
+        logging.error(f"Error calling sample_triples endpoint: {str(e)}")
+        return {"error": f"Failed to retrieve sample triples: {str(e)}"}
+    
+    @ai_function
+    def get_nodes_by_label(self, label: str) -> List[dict]:
+      """
+      Retrieve 10 nodes of a given type, returning either id or name as available.
+      
+      Args:
+        label: The label of the nodes to retrieve (e.g., Gene, Protein, Disease, Chemical, Phenotype,
+               AA_Intervention, Epigenetic_Modification, Aging_Phenotype, Hallmark, Metabolite, Tissue)
+        
+      Returns:
+        List[dict]: A list of up to 10 nodes with their primary identifiers
+      """
+      try:
+        response = self.api_call("get_nodes_by_label", label=label)
+        return response
+      except Exception as e:
+        logging.error(f"Error calling get_nodes_by_label endpoint: {str(e)}")
+        return {"error": f"Failed to retrieve nodes by label: {str(e)}"}
+    
+    @ai_function
+    def get_subgraph(self, property_name: str, property_value: str) -> dict:
+      """
+      Retrieve a subgraph of related nodes by specifying the property and value of the start node
+      
+      Args:
+        property_name: Property name of the start node to search for
+        property_value: Value of the property to search for
+        
+      Returns:
+        dict: A subgraph of nodes related to the specified node
+      """
+      try:
+        response = self.api_call("subgraph", property_name=property_name, property_value=property_value)
+        return response
+      except Exception as e:
+        logging.error(f"Error calling subgraph endpoint: {str(e)}")
+        return {"error": f"Failed to retrieve subgraph: {str(e)}"}
+    
+    @ai_function
+    def search_biological_entities(self, targetTerm: str) -> List[dict]:
+      """
+      Search biological entities such as Gene, Protein, Chemical, Disease, Phenotype, AA_Intervention, 
+      Epigenetic_Modification, Aging_Phenotype, Hallmark, Metabolite or Tissue by name
+      
+      Args:
+        targetTerm: The name or term to search for in biological entities
+        
+      Returns:
+        List[dict]: A list of entity types with their top 3 matching entities
+      """
+      try:
+        response = self.api_call("search_biological_entities", targetTerm=targetTerm)
+        return response
+      except Exception as e:
+        logging.error(f"Error calling search_biological_entities endpoint: {str(e)}")
+        return {"error": f"Failed to search biological entities: {str(e)}"}
+    
+    @ai_function
+    def get_entity_relationships(self, 
+                                entity_type: str, 
+                                property_name: str, 
+                                property_value: str, 
+                                relationship_type: str = None) -> dict:
+      """
+      Retrieve the count and list of related entities for a specified entity and optionally by relationship type
+      
+      Args:
+        entity_type: The type of entity to search for (e.g., Gene, Protein)
+        property_name: The property used to identify the entity (e.g., id, name)
+        property_value: The value of the property for the entity
+        relationship_type: The type of relationship to filter by (optional)
+        
+      Returns:
+        dict: The count and details of related entities, optionally filtered by relationship type
+      """
+      try:
+        params = {
+          "entity_type": entity_type,
+          "property_name": property_name,
+          "property_value": property_value
+        }
+        if relationship_type:
+          params["relationship_type"] = relationship_type
+          
+        response = self.api_call("entity_relationships", **params)
+        return response
+      except Exception as e:
+        logging.error(f"Error calling entity_relationships endpoint: {str(e)}")
+        return {"error": f"Failed to retrieve entity relationships: {str(e)}"}
+    
+    @ai_function
+    def check_relationship(self, 
+                          entity1_type: str,
+                          entity1_property_name: str,
+                          entity1_property_value: str,
+                          entity2_type: str,
+                          entity2_property_name: str,
+                          entity2_property_value: str) -> dict:
+      """
+      Check if a relationship exists between two entities and return the type of relationship
+      
+      Args:
+        entity1_type: The type of the first entity (e.g., Gene, Protein)
+        entity1_property_name: The property name to identify the first entity (e.g., id, name)
+        entity1_property_value: The property value to identify the first entity
+        entity2_type: The type of the second entity (e.g., Disease, Protein)
+        entity2_property_name: The property name to identify the second entity (e.g., id, name)
+        entity2_property_value: The property value to identify the second entity
+        
+      Returns:
+        dict: Information whether a relationship exists and its type
+      """
+      try:
+        params = {
+          "entity1_type": entity1_type,
+          "entity1_property_name": entity1_property_name,
+          "entity1_property_value": entity1_property_value,
+          "entity2_type": entity2_type,
+          "entity2_property_name": entity2_property_name,
+          "entity2_property_value": entity2_property_value
+        }
+        response = self.api_call("check_relationship", **params)
+        return response
+      except Exception as e:
+        logging.error(f"Error calling check_relationship endpoint: {str(e)}")
+        return {"error": f"Failed to check relationship: {str(e)}"}
+    
+    @ai_function
+    def predict_tail(self, head: str, relation: str, top_k_predictions: int = 10) -> dict:
+      """
+      Predict the top K tail entities given a head entity and relation using a PyKEEN KGE model
+      
+      Args:
+        head: model_id for the head entity for the prediction
+        relation: Relation for the prediction
+        top_k_predictions: Number of top predictions to return (default is 10)
+        
+      Returns:
+        dict: Head entity, relation, and a list of predicted tail entities with scores
+      """
+      try:
+        params = {
+          "head": head,
+          "relation": relation,
+          "top_k_predictions": top_k_predictions
+        }
+        response = self.api_call("predict_tail", **params)
+        return response
+      except Exception as e:
+        logging.error(f"Error calling predict_tail endpoint: {str(e)}")
+        return {"error": f"Failed to predict tail entities: {str(e)}"}
+    
+    @ai_function
+    def get_prediction_rank(self, head: str, relation: str, tail: str) -> dict:
+      """
+      Get the rank and score of a specific tail entity for a given head and relation, along with the maximum score.
+      
+      Args:
+        head: model_id for head entity for the prediction
+        relation: Relation for the prediction
+        tail: model_id for tail entity to check for its rank
+        
+      Returns:
+        dict: The rank, score, and maximum score of the prediction
+      """
+      try:
+        params = {
+          "head": head,
+          "relation": relation,
+          "tail": tail
+        }
+        response = self.api_call("get_prediction_rank", **params)
+        return response
+      except Exception as e:
+        logging.error(f"Error calling get_prediction_rank endpoint: {str(e)}")
+        return {"error": f"Failed to get prediction rank: {str(e)}"}
