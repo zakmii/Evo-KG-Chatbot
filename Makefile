@@ -5,4 +5,4 @@ install:
 	poetry install
 
 streamlit-dev:
-	nohup poetry run streamlit run streamlit_app_2.py --server.port 8501
+	poetry run streamlit run streamlit_app_2.py --server.port 8501
