@@ -135,3 +135,17 @@ Interaction: Keep responses concise and offer summaries or options for large dat
         response.raise_for_status()
         return response.json()
     
+    @ai_function
+    def hello_world(self) -> dict:
+      """
+      A simple test endpoint that returns 'Hello, World!'
+      
+      Returns:
+        dict: A simple greeting message
+      """
+      try:
+        response = self.api_call("hello_world")
+        return response
+      except Exception as e:
+        logging.error(f"Error calling hello_world endpoint: {str(e)}")
+        return {"error": f"Failed to get hello world message: {str(e)}"}
