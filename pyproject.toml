@@ -5,6 +5,7 @@ description = "LLM retrieval augmented generation agent for EvoKG."
 authors = ["Ankit Singh <ankit21450@iiitd.ac.in>"]
 license = "MIT"
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python=">=3.11,<4.0"
