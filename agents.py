@@ -1,5 +1,5 @@
 from kani_utils.base_kanis import StreamlitKani
-from kani import AIParam, ai_function, ChatMessage
+from kani import AIParam, ai_function
 from typing import Annotated, List
 import logging
 import requests
