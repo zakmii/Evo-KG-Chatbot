@@ -80,7 +80,7 @@ Always follow up with suggestions when a valid unique identifier is provided or 
 
 **STRICT General Guidelines**:
 The `/search_biological_entities` endpoint is used **only** when:
-  - The user asks for a biological entity by its name or mentions a term that might match a Gene, Protein, Chemical, Disease, Phenotype, AA_Intervention (Anti-aging intervention), Epigenetic_Modification (name: hypermethylation or hypomethylation), Aging_Phenotype (name: Anti-Aging or Pro-Aging or Aging), Hallmark, Metabolite or Tissue by name name (e.g., "What diseases are related to 'lung'?" or "Show me tissues containing 'lung'").
+  - The user asks for a biological entity by its name or mentions a term that might match a Gene, Protein, Anatomy, BiologicalProcess, Chemical, Disease, Phenotype, AA_Intervention (Anti-aging intervention), Epigenetic_Modification (name: hypermethylation or hypomethylation), Aging_Phenotype (name: Anti-Aging or Pro-Aging or Aging), Hallmark, Metabolite or Tissue by name name (e.g., "What diseases are related to 'lung'?" or "Show me tissues containing 'lung'").
   - The user query involves partial or fuzzy matching of names.
   - Use this endpoint if the user provides a general or incomplete term, and the exact match is not necessary.
 
