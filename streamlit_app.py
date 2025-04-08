@@ -10,7 +10,8 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-def get_img_as_base64(file_path:str):
+
+def get_img_as_base64(file_path: str):
     try:
         with open(file_path, "rb") as f:
             data = f.read()
@@ -18,6 +19,7 @@ def get_img_as_base64(file_path:str):
     except Exception as e:
         st.warning(f"Could not load image {file_path}: {str(e)}")
         return None
+
 
 def clear_chat():
     if "agents" in st.session_state:
@@ -38,7 +40,9 @@ def initialize_session_state():
         st.session_state.logger.addHandler(logging.StreamHandler())
 
     st.session_state.setdefault("user_api_key", "")
-    st.session_state.setdefault("original_api_key", st.secrets["OPENAI_API_KEY"])  # Store the original API key
+    st.session_state.setdefault(
+        "original_api_key", st.secrets["OPENAI_API_KEY"]
+    )  # Store the original API key
     st.session_state.setdefault("show_function_calls", False)
     st.session_state.setdefault("ui_disabled", False)
     st.session_state.setdefault("lock_widgets", False)
@@ -69,7 +73,7 @@ def initialize_session_state():
                     "EvoKG Assistant",
                     model="gpt-4o-mini",
                     openai_api_key=get_current_api_key_for_agent_use(),
-                    auto_summarize_buffer_tokens=10000
+                    auto_summarize_buffer_tokens=10000,
                 ),
                 "greeting": greeting,
                 "avatar": "ℹ️",
@@ -81,7 +85,9 @@ def initialize_session_state():
         set_clear_chat_timer()
         st.session_state.clear_chat_timer_set = True
 
-    st.session_state.setdefault("current_agent_name", list(st.session_state.agents.keys())[0])
+    st.session_state.setdefault(
+        "current_agent_name", list(st.session_state.agents.keys())[0]
+    )
 
     for agent in st.session_state.agents.values():
         if "conversation_started" not in agent:
@@ -92,7 +98,9 @@ def initialize_session_state():
     st.session_state.setdefault("current_page", "intro")
 
     # Add navigation menu style
-    st.session_state.setdefault("nav_style", """
+    st.session_state.setdefault(
+        "nav_style",
+        """
         <style>
         .nav-link {
             padding: 8px 16px;
@@ -111,7 +119,8 @@ def initialize_session_state():
             font-weight: bold;
         }
         </style>
-    """)
+    """,
+    )
 
 
 def initialize_page():
@@ -138,7 +147,11 @@ def initialize_page():
 
 def get_current_api_key_for_agent_use():
     """Get the current API key, either the user's or the default."""
-    key = st.session_state.user_api_key if st.session_state.user_api_key else st.session_state.original_api_key
+    key = (
+        st.session_state.user_api_key
+        if st.session_state.user_api_key
+        else st.session_state.original_api_key
+    )
     if key is None:
         key = "placeholder"
     return key
@@ -152,13 +165,19 @@ def update_agents_api_key():
 
 def has_valid_api_key():
     """Check if a valid API key is available."""
-    return bool(st.session_state.user_api_key) or bool(st.session_state.original_api_key)
+    return bool(st.session_state.user_api_key) or bool(
+        st.session_state.original_api_key
+    )
 
 
 def render_message(message):
     """Render a chat message in Streamlit."""
-    current_agent_avatar = st.session_state.agents[st.session_state.current_agent_name].get("avatar", None)
-    current_user_avatar = st.session_state.agents[st.session_state.current_agent_name].get("user_avatar", None)
+    current_agent_avatar = st.session_state.agents[
+        st.session_state.current_agent_name
+    ].get("avatar", None)
+    current_user_avatar = st.session_state.agents[
+        st.session_state.current_agent_name
+    ].get("user_avatar", None)
 
     if message.role == "user":
         with st.chat_message("user", avatar=current_user_avatar):
@@ -192,27 +211,35 @@ def render_message(message):
 
 def handle_chat_input():
     """Handle user chat input in the Streamlit chat interface."""
-    if prompt := st.chat_input(disabled=st.session_state.lock_widgets, on_submit=lock_ui):
+    if prompt := st.chat_input(
+        disabled=st.session_state.lock_widgets, on_submit=lock_ui
+    ):
         agent = st.session_state.agents[st.session_state.current_agent_name]
 
         # Continue with conversation
-        if not agent.get('conversation_started', False):
-            messages = agent['agent'].chat(prompt, yield_prompt_message=True)
-            agent['conversation_started'] = True
+        if not agent.get("conversation_started", False):
+            messages = agent["agent"].chat(prompt, yield_prompt_message=True)
+            agent["conversation_started"] = True
         else:
-            messages = agent['agent'].chat(prompt, yield_prompt_message=True)
+            messages = agent["agent"].chat(prompt, yield_prompt_message=True)
 
         st.session_state.current_action = "*Thinking...*"
         while True:
             try:
                 with st.spinner(st.session_state.current_action):
                     message = next(messages)
-                    agent['messages'].append(message)
+                    agent["messages"].append(message)
                     st.session_state.current_action = render_message(message)
 
                     # Log message info
-                    session_id = st.runtime.scriptrunner.add_script_run_ctx().streamlit_script_run_ctx.session_id
-                    info = {"session_id": session_id, "message": message.model_dump(), "agent": st.session_state.current_agent_name}
+                    session_id = (
+                        st.runtime.scriptrunner.add_script_run_ctx().streamlit_script_run_ctx.session_id
+                    )
+                    info = {
+                        "session_id": session_id,
+                        "message": message.model_dump(),
+                        "agent": st.session_state.current_agent_name,
+                    }
                     st.session_state.logger.info(info)
             except StopIteration:
                 break
@@ -224,9 +251,9 @@ def handle_chat_input():
 def clear_chat_current_agent():
     """Clear chat for the current agent."""
     current_agent = st.session_state.agents[st.session_state.current_agent_name]
-    current_agent['conversation_started'] = False
-    current_agent['agent'].clear_history()
-    st.session_state.agents[st.session_state.current_agent_name]['messages'] = []
+    current_agent["conversation_started"] = False
+    current_agent["agent"].clear_history()
+    st.session_state.agents[st.session_state.current_agent_name]["messages"] = []
 
 
 def lock_ui():
@@ -246,7 +273,7 @@ def show_intro_page():
             
         </div>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     # Custom hover CSS for sections
@@ -264,7 +291,7 @@ def show_intro_page():
         }
         </style>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     # --- INTRO SECTIONS ---
@@ -292,7 +319,7 @@ def show_intro_page():
           </p>
         </div>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     st.markdown(
@@ -315,7 +342,7 @@ def show_intro_page():
             </ul>
         </div>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     st.markdown("---")
@@ -337,7 +364,7 @@ def show_intro_page():
             </ul>
         </div>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     st.markdown("---")
@@ -353,7 +380,7 @@ def show_intro_page():
             </p>
         </div>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     # Centered button with custom styling
@@ -368,11 +395,17 @@ def show_chat_page():
     """Show the chatbot page."""
     st.header(st.session_state.current_agent_name)
 
-    current_agent_avatar = st.session_state.agents[st.session_state.current_agent_name].get("avatar", None)
+    current_agent_avatar = st.session_state.agents[
+        st.session_state.current_agent_name
+    ].get("avatar", None)
     with st.chat_message("assistant", avatar=current_agent_avatar):
-        st.write(st.session_state.agents[st.session_state.current_agent_name]['greeting'])
+        st.write(
+            st.session_state.agents[st.session_state.current_agent_name]["greeting"]
+        )
 
-    for message in st.session_state.agents[st.session_state.current_agent_name]['messages']:
+    for message in st.session_state.agents[st.session_state.current_agent_name][
+        "messages"
+    ]:
         render_message(message)
 
     if has_valid_api_key():
@@ -427,22 +460,26 @@ def show_contact_page():
 def main():
     """Main Streamlit UI."""
     with st.sidebar:
-        st.markdown("""
+        st.markdown(
+            """
             <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
                 <img src="data:image/png;base64,{}" alt="Logo" style="height: 150px;">
                 <h1 style="margin: 0; font-size: 44px;">EvoKG</h1>
             </div>
-        """.format(get_img_as_base64("logo.png")), unsafe_allow_html=True)
+        """.format(
+                get_img_as_base64("logo.png")
+            ),
+            unsafe_allow_html=True,
+        )
 
         st.markdown("---")
-
 
         # Navigation menu
         pages = {
             "intro": "Introduction",
             "chat": "Chatbot",
             "tutorial": "Tutorial",
-            "contact": "Contact Us"
+            "contact": "Contact Us",
         }
 
         # Custom CSS for navigation
@@ -450,10 +487,17 @@ def main():
 
         # Navigation buttons with active state
         for page_id, page_name in pages.items():
-            button_style = "nav-link active" if st.session_state.current_page == page_id else "nav-link"
-            if st.button(page_name, key=f"nav_{page_id}",
-                         help=f"Go to {page_name} page",
-                         use_container_width=True):
+            button_style = (
+                "nav-link active"
+                if st.session_state.current_page == page_id
+                else "nav-link"
+            )
+            if st.button(
+                page_name,
+                key=f"nav_{page_id}",
+                help=f"Go to {page_name} page",
+                use_container_width=True,
+            ):
                 st.session_state.current_page = page_id
                 st.rerun()
 
@@ -467,13 +511,13 @@ def main():
                 options=agent_names,
                 key="current_agent_name",
                 disabled=st.session_state.lock_widgets,
-                label_visibility="visible"
+                label_visibility="visible",
             )
 
             st.button(
                 label="Clear chat for current assistant",
                 on_click=clear_chat_current_agent,
-                disabled=st.session_state.lock_widgets
+                disabled=st.session_state.lock_widgets,
             )
 
             st.markdown("---")
@@ -484,7 +528,7 @@ def main():
                 max_chars=51,
                 type="password",
                 help="Enter your OpenAI API key here to override the default provided by the app.",
-                disabled=st.session_state.lock_widgets
+                disabled=st.session_state.lock_widgets,
             )
             if user_key != st.session_state.user_api_key and len(user_key) == 51:
                 st.session_state.user_api_key = user_key

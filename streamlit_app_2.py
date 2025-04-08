@@ -3,9 +3,7 @@ import os
 import dotenv
 from kani.engines.openai import OpenAIEngine
 from kani.engines.huggingface import HuggingEngine
-
 from agents import EvoKgAgent
-import dotenv
 
 dotenv.load_dotenv()
 
@@ -40,7 +38,7 @@ def get_agents():
     return {
         "EvoLLM (4o-mini)": EvoKgAgent(
             engine
-        ),  #prompt_tokens_cost = 0.005, completion_tokens_cost = 0.015),
+        ),  # prompt_tokens_cost = 0.005, completion_tokens_cost = 0.015),
         "EvoLLM (Mistral)": EvoKgAgent(mistralEngine),
     }
 
