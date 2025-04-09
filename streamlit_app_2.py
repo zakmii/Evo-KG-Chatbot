@@ -27,9 +27,9 @@ ks.initialize_app_config(
 
 # define an engine to use (see Kani documentation for more info)
 engine = OpenAIEngine(os.environ["OPENAI_API_KEY"], model="gpt-4o-mini")
-mistralEngine = HuggingEngine(
-    model_id="mistralai/Mistral-7B-Instruct-v0.3", token=os.environ["MISTRAL_TOKEN"]
-)
+# mistralEngine = HuggingEngine(
+#     model_id="mistralai/Mistral-7B-Instruct-v0.3", token=os.environ["MISTRAL_TOKEN"]
+# )
 
 
 # We also have to define a function that returns a dictionary of agents to serve
@@ -39,7 +39,7 @@ def get_agents():
         "EvoLLM (4o-mini)": EvoKgAgent(
             engine
         ),  # prompt_tokens_cost = 0.005, completion_tokens_cost = 0.015),
-        "EvoLLM (Mistral)": EvoKgAgent(mistralEngine),
+        # "EvoLLM (Mistral)": EvoKgAgent(mistralEngine),
     }
 
 
