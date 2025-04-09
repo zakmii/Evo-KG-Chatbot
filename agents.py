@@ -206,7 +206,7 @@ Interaction: Keep responses concise and offer summaries or options for large dat
         label: Annotated[
             str,
             AIParam(
-                desc="The label of the nodes to retrieve (e.g., Gene, Protein, Disease, Chemical, Phenotype, AA_Intervention, Epigenetic_Modification, Aging_Phenotype, Hallmark, Metabolite, Tissue)"
+                desc="The label of the nodes to retrieve (e.g., Gene, Protein, Disease, Chemical, Phenotype, Tissue, Anatomy, BiologicalProcess, MolecularFunction, CellularComponent, Pathway, Mutation)"
             ),
         ],
     ) -> List[dict]:
@@ -215,7 +215,7 @@ Interaction: Keep responses concise and offer summaries or options for large dat
 
         Args:
           label: The label of the nodes to retrieve (e.g., Gene, Protein, Disease, Chemical, Phenotype,
-                 AA_Intervention, Epigenetic_Modification, Aging_Phenotype, Hallmark, Metabolite, Tissue)
+                 Tissue, Anatomy, BiologicalProcess, MolecularFunction, CellularComponent, Pathway, Mutation)
 
         Returns:
           List[dict]: A list of up to 10 nodes with their primary identifiers
@@ -263,15 +263,18 @@ Interaction: Keep responses concise and offer summaries or options for large dat
     def search_biological_entities(
         self,
         targetTerm: Annotated[
-            str, AIParam(desc="The name or term to search for in biological entities")
+            str,
+            AIParam(
+                desc="The name or id or the term to search for in biological entities"
+            ),
         ],
     ) -> List[dict]:
         """
-        Search biological entities such as Gene, Protein, Chemical, Disease, Phenotype, AA_Intervention,
-        Epigenetic_Modification, Aging_Phenotype, Hallmark, Metabolite or Tissue by name
+        Search biological entities such as Gene, Protein, Disease, Chemical, Phenotype, Tissue, Anatomy,
+        BiologicalProcess, MolecularFunction, CellularComponent, Pathway or Mutation by name or id
 
         Args:
-          targetTerm: The name or term to search for in biological entities
+          targetTerm: The name or id or the term to search for in biological entities
 
         Returns:
           List[dict]: A list of entity types with their top 3 matching entities
@@ -402,14 +405,14 @@ Interaction: Keep responses concise and offer summaries or options for large dat
         ],
         relation: Annotated[
             str,
-            AIParam(desc="Relation for the prediction (e.g. GENE_GENE, DRUG_DISEASE)"),
+            AIParam(desc="Relation for the prediction"),
         ],
         top_k_predictions: Annotated[
-            int, AIParam(desc="Number of top predictions to return")
+            int, AIParam(desc="Number of top predictions to return (default is 10)")
         ] = 10,
     ) -> dict:
         """
-        Predict the top K tail entities given a head entity and relation using a PyKEEN KGE model
+        Predict the top K tail entities given 'model_id' of entities and relation using a PyKEEN KGE model
 
         Args:
           head: model_id for the head entity for the prediction
@@ -439,7 +442,7 @@ Interaction: Keep responses concise and offer summaries or options for large dat
         ],
         relation: Annotated[
             str,
-            AIParam(desc="Relation for the prediction (e.g. GENE_GENE, DRUG_DISEASE)"),
+            AIParam(desc="Relation for the prediction"),
         ],
         tail: Annotated[
             str, AIParam(desc="model_id for tail entity to check for its rank")
