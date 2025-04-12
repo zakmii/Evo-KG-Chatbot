@@ -2,10 +2,15 @@ import kani_utils.kani_streamlit_server as ks
 import os
 import dotenv
 from kani.engines.openai import OpenAIEngine
-from kani.engines.huggingface import HuggingEngine
 from agents import EvoKgAgent
+import pathlib
 
 dotenv.load_dotenv()
+
+# Get the absolute path for local assets to avoid path issues
+current_dir = pathlib.Path(__file__).parent.absolute()
+logo_path = str(current_dir / "logo.png")
+bg_image_path = str(current_dir / "floating-graph-nodes.png")
 
 # initialize the application and set some page settings
 # parameters here are passed to streamlit.set_page_config,
@@ -15,12 +20,13 @@ ks.initialize_app_config(
     show_function_calls=False,
     page_title="EvoLLM",
     app_title="EvoLLM",
-    logo_path="logo.png",
+    logo_path=logo_path,
+    background_image=bg_image_path,
     page_icon="🧬",  # can also be a URL
     initial_sidebar_state="expanded",
     menu_items={
-        "Get Help": "https://github.com/monarch-initiative/phenomics-assistant",
-        "Report a Bug": "https://github.com/monarch-initiative/phenomics-assistant/issues",
+        "Get Help": "https://github.com/zakmii/Evo-KG-Chatbot",
+        "Report a Bug": "https://github.com/zakmii/Evo-KG-Chatbot/issues",
         "About": "EvoLLM is built on GPT-4o-mini, Streamlit, zhudotexe/kani, hourfu/redlines, and oneilsh/kani-utils.",
     },
 )
