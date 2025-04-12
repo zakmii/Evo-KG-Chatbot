@@ -4,13 +4,33 @@ import dotenv
 from kani.engines.openai import OpenAIEngine
 from agents import EvoKgAgent
 import pathlib
+import logging
 
 dotenv.load_dotenv()
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Get the absolute path for local assets to avoid path issues
 current_dir = pathlib.Path(__file__).parent.absolute()
 logo_path = str(current_dir / "logo.png")
 bg_image_path = str(current_dir / "floating-graph-nodes.png")
+
+# Check if files exist
+if not pathlib.Path(logo_path).exists():
+    logger.warning(f"Logo file not found at {logo_path}")
+    logo_path = None
+
+if not pathlib.Path(bg_image_path).exists():
+    logger.warning(f"Background image not found at {bg_image_path}, using default URL")
+    # Use remote URL as fallback
+    bg_image_path = "https://www.nayuki.io/res/animated-floating-graph-nodes/floating-graph-nodes.png"
+else:
+    logger.info(f"Using local background image: {bg_image_path}")
+    # For local files in Streamlit, they need to be loaded differently
+    # We'll use a data URL approach for local images if needed
+    # This remains a URL string, so it will be handled correctly
 
 # initialize the application and set some page settings
 # parameters here are passed to streamlit.set_page_config,
