@@ -50,7 +50,7 @@ def initialize_session_state():
     greeting = """
         # Welcome to EvoKG Chatbot
 
-        #### I'm the EvoKG Assistant, and I’m here to help you explore and understand the EvoKG knowledge graph. 
+        #### I'm the EvoKG Assistant, and I’m here to help you explore and understand the EvoKG knowledge graph.
 
         ## Sample Questions You Can Ask
         To get started, try asking questions like:
@@ -135,7 +135,7 @@ def initialize_page():
             background-position: center;
         }
 
-        [data-testid="stHeader"] { 
+        [data-testid="stHeader"] {
             background-color: rgba(0,0,0,0);
         }
         </style>
@@ -232,9 +232,7 @@ def handle_chat_input():
                     st.session_state.current_action = render_message(message)
 
                     # Log message info
-                    session_id = (
-                        st.runtime.scriptrunner.add_script_run_ctx().streamlit_script_run_ctx.session_id
-                    )
+                    session_id = st.runtime.scriptrunner.add_script_run_ctx().streamlit_script_run_ctx.session_id
                     info = {
                         "session_id": session_id,
                         "message": message.model_dump(),
@@ -270,7 +268,7 @@ def show_intro_page():
         <div style="display: flex; align-items: center;">
             <!-- Main heading text -->
             <h1 style="margin-right: 10px;">Welcome to EvoKG Chatbot</h1>
-            
+
         </div>
         """,
         unsafe_allow_html=True,
@@ -421,12 +419,12 @@ def show_tutorial_page():
         """
         ## Getting Started
         Learn how to effectively use the EvoKG Assistant with these tutorials:
-        
+
         ### Basic Queries
         1. Searching for genes
         2. Finding disease relationships
         3. Exploring protein interactions
-        
+
         ### Advanced Features
         1. Complex relationship queries
         2. Subgraph analysis
@@ -441,7 +439,7 @@ def show_contact_page():
     st.markdown(
         """
         ## Get in Touch
-        
+
         For questions, feedback, or support:
         - Email: gaurav.ahuja@iiitd.ac.in
         - GitHub: [EvoKG Repository](https://github.com/zakmii/Evo-KG-Chatbot/tree/main)
@@ -450,7 +448,7 @@ def show_contact_page():
         Developer:
         - Ankit Singh : https://github.com/zakmii
         - Arushi Sharma : https://github.com/AruShar
-        
+
         ### Report Issues
         If you encounter any problems, please report them on our GitHub repository.
         """
@@ -466,9 +464,7 @@ def main():
                 <img src="data:image/png;base64,{}" alt="Logo" style="height: 150px;">
                 <h1 style="margin: 0; font-size: 44px;">EvoKG</h1>
             </div>
-        """.format(
-                get_img_as_base64("logo.png")
-            ),
+        """.format(get_img_as_base64("logo.png")),
             unsafe_allow_html=True,
         )
 
@@ -487,11 +483,6 @@ def main():
 
         # Navigation buttons with active state
         for page_id, page_name in pages.items():
-            button_style = (
-                "nav-link active"
-                if st.session_state.current_page == page_id
-                else "nav-link"
-            )
             if st.button(
                 page_name,
                 key=f"nav_{page_id}",
@@ -505,15 +496,6 @@ def main():
 
         # Only show agent controls on chat page
         if st.session_state.current_page == "chat":
-            agent_names = list(st.session_state.agents.keys())
-            current_agent_name = st.selectbox(
-                label="**Assistant**",
-                options=agent_names,
-                key="current_agent_name",
-                disabled=st.session_state.lock_widgets,
-                label_visibility="visible",
-            )
-
             st.button(
                 label="Clear chat for current assistant",
                 on_click=clear_chat_current_agent,
