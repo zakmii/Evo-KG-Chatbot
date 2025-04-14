@@ -94,7 +94,7 @@ def render_evokg_intro():
     # Centered button with custom styling
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if st.button("Start Exploring →", use_container_width=True):
+        if st.button("Start Chatting →", use_container_width=True):
             st.session_state.current_page = "chat"
             st.rerun()
 
