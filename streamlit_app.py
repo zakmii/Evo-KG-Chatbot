@@ -97,7 +97,28 @@ def render_evokg_intro():
         if st.button("Start Chatting →", use_container_width=True):
             st.session_state.current_page = "chat"
             st.rerun()
-
+            
+            
+def render_tutorial():
+    st.title("Chatbot Tutorial 🤖")
+    st.markdown("""
+    ## Features of the Chatbot:
+    
+    - 💬 **Chat with AI**: You can ask questions, get help, or just have a conversation.
+    - 📚 **Context-Aware**: The bot remembers what you asked earlier in the session.
+    - 🔁 **Reset**: Clear chat with the reset button.
+    - 📌 **Use Cases**:
+        - Q&A
+        - Help with programming
+        - Getting explanations
+        - Small talk
+    - 💡 Try:
+        - `"What can you do?"`
+        - `"Explain binary search"`
+        - `"Tell me a joke"`
+    
+    Happy chatting! 🎉
+    """)
 
 # Define custom pages dict with tuples of (page_name, render_function, icon)
 custom_pages = {
@@ -105,6 +126,8 @@ custom_pages = {
     "about": ("About Us", render_about_page, "📧"),
     # Chat page is handled separately by the framework
     "chat": ("Chatbot", None, "💬"),
+    "Tutorial": render_tutorial,
+
 }
 
 # initialize the application and set some page settings
@@ -145,6 +168,8 @@ def get_agents():
     }
 
 
+
+
 # tell the app to use that function to create agents when needed
 ks.set_app_agents(get_agents)
 
@@ -154,3 +179,5 @@ ks.set_app_agents(get_agents)
 ########################
 
 ks.serve_app()
+
+
