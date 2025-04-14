@@ -5,6 +5,7 @@ from kani.engines.openai import OpenAIEngine
 from agents import EvoKgAgent
 import pathlib
 import logging
+import streamlit as st
 
 dotenv.load_dotenv()
 
@@ -32,6 +33,80 @@ else:
     # We'll use a data URL approach for local images if needed
     # This remains a URL string, so it will be handled correctly
 
+
+# Define custom page rendering functions
+def render_about_page():
+    logger.info("Rendering About Us page")
+
+    st.title("Contact Us")
+    st.markdown(
+        """
+        ## Get in Touch
+
+        For questions, feedback, or support:
+        - Email: gaurav.ahuja@iiitd.ac.in
+        - GitHub: [EvoKG Repository](https://github.com/zakmii/Evo-KG-Chatbot/tree/kani_backend)
+
+        Developer:
+        - Ankit Singh : https://github.com/zakmii
+        - Arushi Sharma : https://github.com/AruShar
+
+        ### Report Issues
+        If you encounter any problems, please report them on our GitHub repository.
+        """
+    )
+
+
+def render_evokg_intro():
+    logger.info("Rendering EvoKG Introduction page")
+
+    st.markdown(
+        """
+        <div style="display: flex; align-items: center;">
+            <!-- Main heading text -->
+            <h1 style="margin-right: 10px;">Welcome to EvoKG Chatbot</h1>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    st.markdown(
+        """
+        <div class="hover-section">
+          <h2>What is EvoKG?</h2>
+          <p>
+            EvoKG is a groundbreaking Evolutionary Knowledge Graph that brings together
+            biological insights across six species, organized in evolutionary order:
+          </p>
+          <ul>
+            <li>Y: <em>Saccharomyces cerevisiae</em> (Yeast)</li>
+            <li>C: <em>Caenorhabditis elegans</em> (Nematode)</li>
+            <li>D: <em>Drosophila melanogaster</em> (Fruit Fly)</li>
+            <li>Z: <em>Danio rerio</em> (Zebrafish)</li>
+            <li>M: <em>Mus musculus</em> (Mouse)</li>
+            <li>H: <em>Homo sapiens</em> (Human)</li>
+          </ul>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # Centered button with custom styling
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.button("Start Exploring →", use_container_width=True):
+            st.session_state.current_page = "chat"
+            st.rerun()
+
+
+# Define custom pages dict with tuples of (page_name, render_function, icon)
+custom_pages = {
+    "intro": ("Introduction", render_evokg_intro, "🏠"),
+    "about": ("About Us", render_about_page, "📧"),
+    # Chat page is handled separately by the framework
+    "chat": ("Chatbot", None, "💬"),
+}
+
 # initialize the application and set some page settings
 # parameters here are passed to streamlit.set_page_config,
 # see more at https://docs.streamlit.io/library/api-reference/utilities/st.set_page_config
@@ -44,6 +119,7 @@ ks.initialize_app_config(
     background_image=bg_image_path,
     page_icon="🧬",  # can also be a URL
     initial_sidebar_state="expanded",
+    custom_pages=custom_pages,
     menu_items={
         "Get Help": "https://github.com/zakmii/Evo-KG-Chatbot",
         "Report a Bug": "https://github.com/zakmii/Evo-KG-Chatbot/issues",
