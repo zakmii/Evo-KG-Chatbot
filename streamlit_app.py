@@ -126,7 +126,8 @@ custom_pages = {
     "about": ("About Us", render_about_page, "📧"),
     # Chat page is handled separately by the framework
     "chat": ("Chatbot", None, "💬"),
-    "Tutorial": render_tutorial,
+    "tutorial": ("Tutorial", render_tutorial, "📘"),
+
 
 }
 
