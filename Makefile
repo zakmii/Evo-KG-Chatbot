@@ -5,4 +5,4 @@ install:
 	poetry install
 
 streamlit-dev:
-	poetry run streamlit run streamlit_app_2.py --server.port 8501
+	poetry run streamlit run streamlit_app.py --server.port 8501
